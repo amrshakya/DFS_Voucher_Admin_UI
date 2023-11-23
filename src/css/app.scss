@@ -1,0 +1,25 @@
+// app global css in SCSS form
+.q-table .q-tr .q-td.q-pa-none {
+  padding: 0 0;
+}
+
+.q-table__control > * {
+  margin-top: 8px;
+  margin-left: 8px;
+}
+
+.q-card__actions {
+  padding: 16px;
+}
+
+.q-field--readonly {
+  padding-bottom: 20px;
+}
+
+.notification.q-menu {
+  max-width: 95vw !important;
+}
+
+.text-amount {
+  font-size: 1rem !important;
+}
