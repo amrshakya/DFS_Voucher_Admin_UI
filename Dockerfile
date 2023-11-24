@@ -9,12 +9,7 @@ COPY package*.json /admin-ui/project
 RUN npm install
 
 # Copy app source
-COPY ./config /admin-ui/project/config
-COPY ./public /admin-ui/project/public
-COPY ./src /admin-ui/project/src
-COPY ./src-pwa /admin-ui/project/src-pwa
-COPY ./quasar.conf.js /admin-ui/project/quasar.conf.js
-COPY ./server.js /admin-ui/project/server.js
+COPY . /admin-ui/project/
 
 RUN npm run build
 
