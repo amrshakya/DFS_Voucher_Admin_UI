@@ -16,6 +16,8 @@ COPY ./src-pwa /admin-ui/project/src-pwa
 COPY ./quasar.conf.js /admin-ui/project/quasar.conf.js
 COPY ./server.js /admin-ui/project/server.js
 
+RUN npm run build
+
 EXPOSE 9990
 
 CMD [ "node", "server.js" ]
