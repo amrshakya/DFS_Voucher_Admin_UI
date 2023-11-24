@@ -9,6 +9,7 @@
     "dev": "mode=dev quasar d",
     "build": "quasar b",
     "start": "npm run build && node server.js",
+    "deploy": "git add . && git commit -m 'build: deploy' && git push origin master",
     "icons": "icongenie generate -i Appicon.png --theme-color 050d40 --skip-trim",
     "lint": "eslint --ext .js,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
