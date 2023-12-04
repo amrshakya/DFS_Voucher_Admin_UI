@@ -1,4 +1,4 @@
 module.exports = {
-  "API": "http://localhost:7749/admin",
+  "API": "https://devapi.lfcoinbdt.com/admin",
   "APP_NAME": "DFSVoucher"
 }

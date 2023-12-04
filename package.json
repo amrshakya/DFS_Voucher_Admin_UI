@@ -6,7 +6,7 @@
   "author": "Amr Shakya<amrshakya@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "mode=dev quasar d",
+    "dev": "mode=local quasar d",
     "build": "quasar b",
     "start": "npm run build && node server.js",
     "deploy": "git add . && git commit -m 'build: deploy' && git push origin master",
