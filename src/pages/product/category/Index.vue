@@ -65,7 +65,7 @@
         </div>
 
         <app-table-v2
-          ref="appTable"
+          :ref="(el) => (table = el)"
           :routeKey="'Id'"
           :route="route"
           :columns="columns"
@@ -73,7 +73,55 @@
           :storeListGettersPath="storeListGettersPath"
           :searchFilter="searchFilter"
         >
-        <template v-slot:body-cell-actions-prepend="props">
+        <template v-slot:body="props">
+          <tr :props="props">
+            <td v-for="col in props.cols" :key="col.name" :props="props">
+              <template v-if="col.name == 'name'">
+                {{ props.row.Name }}
+                <q-chip v-show="props.row.IsFlash" dense color="orange" text-color="white">
+                  Is Flash
+                </q-chip>
+              </template>
+              <template v-else-if="col.name == 'duration'">
+                <span v-if="props.row.IsFlash">
+                  <span>From: {{ formatDate(props.row.StartTime) }}</span><br/>
+                  <span>To: {{ formatDate(props.row.EndTime) }}</span>
+                </span>
+                <span v-else>-</span>
+              </template>
+              <template v-else-if="col.name == 'status'">
+                  <q-chip
+                  :clickable="false"
+                  dense
+                  class="text-weight-medium text-body2 text-white"
+                  size="md"
+                  square
+                  :color="[
+                    'negative',
+                    'positive',
+                  ][col.value]
+                    "
+                >
+                  {{ col.value === 0 ? 'Inactive' : 'Active' }}
+                </q-chip>
+              </template>
+              <template v-else-if="col.name == 'actions'">
+                <q-btn
+                  v-if="route.edit"
+                  v-show="$can('read', route.edit.permission)"
+                  icon="edit"
+                  size="md"
+                  color="secondary"
+                  flat
+                  dense
+                  @click="table.editData(props.row)"
+                />
+              </template>
+              <template v-else>{{ col.value }}</template>
+            </td>
+          </tr>
+        </template>
+        <!-- <template v-slot:body-cell-actions-prepend="props">
           <q-btn
             v-show="$can('read', route.assign.permission)"
             icon="assignment"
@@ -86,7 +134,7 @@
           >
             <q-tooltip> Add Products </q-tooltip>
           </q-btn>
-        </template>
+        </template> -->
         </app-table-v2>
       </q-card-section>
     </q-card>
@@ -100,6 +148,8 @@ import { useStore } from "vuex";
 import AppTableV2 from "components/AppTableV2.vue";
 import SearchFilter from "components/SearchFilter.vue";
 import { useRouter, useRoute } from "vue-router";
+import moment from 'moment-timezone';
+
 export default defineComponent({
   components: {
     AppTableV2,
@@ -121,17 +171,27 @@ export default defineComponent({
       form$: null
     })
 
-    const assign_product = ref({
-      dialog: false,
-      product: null,
-      form$: null
-    })
+    // const assign_product = ref({
+    //   dialog: false,
+    //   product: null,
+    //   form$: null
+    // })
+
+    const formatDate = (date) => {
+      return moment(date).format("YYYY-MM-DD");
+    }
 
     const columns = ref([
       {
         name: "name",
         label: "Category Name",
         field: (row) => row.Name,
+        align: "left"
+      },
+      {
+        name: "duration",
+        label: "Flash Duration",
+        field: (row) => row.StartTime,
         align: "left"
       },
       {
@@ -184,6 +244,7 @@ export default defineComponent({
     }
 
     return {
+      formatDate,
       update_status,
       open_update_status,
       submit_update_status,

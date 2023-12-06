@@ -29,6 +29,34 @@
             :error="v$.order.$error"
             :error-message="v$.order.$errors[0]?.$message"
           />
+          <q-toggle
+            v-model="form.isFlash"
+            label="Is Flash Category"
+            left-label
+          />
+          <q-input
+            v-show="form.isFlash"
+            :model-value="`${form.dateRange.from} - ${form.dateRange.to}`"
+            label="Period Range"
+            filled
+            range
+            :rules="[
+              $rules.requiredIf(form.isFlash == true, 'Value is required')
+            ]"
+          >
+
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="form.dateRange" range>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
           <q-select
             v-model="form.status"
             label="Status"
@@ -60,6 +88,7 @@ import { useQuasar } from "quasar";
 import { useVuelidate } from "@vuelidate/core";
 import { formatHandler } from "src/utils";
 import { required, email } from "@vuelidate/validators";
+import moment from 'moment-timezone';
 
 export default defineComponent({
   components: {},
@@ -76,11 +105,15 @@ export default defineComponent({
       description: "",
       order: 1,
       status: null,
+      isFlash: false,
+      dateRange: { from: '', to: '' },
     });
     const rules = {
       name: { required },
       description: {},
       order: { required },
+      isFlash: {},
+      dateRange: {},
       status: { required }
     };
     const v$ = useVuelidate(rules, form);
@@ -91,6 +124,13 @@ export default defineComponent({
         "id": id,
       });
       form.value = formatHandler.convertKeysToLowerCase({ ...response.data.records[0] });
+      form.value.dateRange = {
+        from: form.value.startTime ? moment(form.value.startTime).format('YYYY-MM-DD') : '',
+        to: form.value.endTime ? moment(form.value.endTime).format('YYYY-MM-DD') : ''
+      }
+      form.value.isFlash = !!form.value.isFlash
+      delete form.value.startTime
+      delete form.value.endTime
       $q.loading.hide();
     });
 
@@ -101,9 +141,15 @@ export default defineComponent({
         const valid = await v$.value.$validate();
         if (!valid) return;
         $q.loading.show();
+
+        const formField = { ...form.value };
+        formField.startTime = formField.isFlash ? formField.dateRange.from : '';
+        formField.endTime = formField.isFlash ? formField.dateRange.to : '';
+        delete formField.dateRange;
+
         const response = await $store.dispatch(route.value.edit.action, {
           id: id,
-          form: form.value,
+          form: formField,
         });
         $q.loading.hide();
         if (response.code === "common.success") {

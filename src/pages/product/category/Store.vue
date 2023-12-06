@@ -29,6 +29,34 @@
             :error="v$.order.$error"
             :error-message="v$.order.$errors[0]?.$message"
           />
+          <q-toggle
+            v-model="form.isFlash"
+            label="Is Flash Category"
+            left-label
+          />
+          <q-input
+            v-show="form.isFlash"
+            :model-value="`${form.dateRange.from} - ${form.dateRange.to}`"
+            label="Period Range"
+            filled
+            range
+            :rules="[
+              $rules.requiredIf(form.isFlash == true, 'Value is required')
+            ]"
+          >
+
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="form.dateRange" range>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
           <q-select
             v-model="form.status"
             label="Status"
@@ -58,7 +86,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useVuelidate } from "@vuelidate/core";
-import { required, sameAs, email } from "@vuelidate/validators";
+import { required, requiredIf, email } from "@vuelidate/validators";
 
 export default defineComponent({
   components: {},
@@ -71,12 +99,16 @@ export default defineComponent({
       name: "",
       description: "",
       order: 1,
+      isFlash: false,
+      dateRange: {from: '', to: ''},
       status: null,
     });
     const rules = {
       name: { required },
       description: {},
       order: { required },
+      isFlash: {},
+      dateRange: {},
       status: { required }
     };
     const v$ = useVuelidate(rules, form);
@@ -88,7 +120,13 @@ export default defineComponent({
         const valid = await v$.value.$validate();
         if (!valid) return;
         $q.loading.show();
-        const response = await $store.dispatch(route.value.create.action, form);
+
+        const formField = { ...form };
+        formField.startTime = formField.isFlash ? formField.dateRange.from : '';
+        formField.endTime = formField.isFlash ? formField.dateRange.to : '';
+        delete formField.dateRange;
+
+        const response = await $store.dispatch(route.value.create.action, formField);
         $q.loading.hide();
         if (response.code === "common.success") {
           $router.back();
