@@ -5,7 +5,7 @@
         <q-form @submit="onSubmit" class="q-gutter-md">
           <div class="row q-col-gutter-sm justify-start">
             <q-select
-              class="col-12"
+              class="col-4"
               v-model="form.type"
               label="Voucher Type"
               :options="productType"
@@ -17,7 +17,7 @@
               :error-message="v$.type.$errors[0]?.$message"
             />
             <q-select
-              class="col-12 col-sm-6"
+              class="col-12 col-sm-4"
               v-show="form.type && form.type != 3"
               v-model="form.merchantId"
               label="Merchant"
@@ -33,8 +33,7 @@
               :error-message="v$.merchantId.$errors[0]?.$message"
             />
             <q-select
-              class="col-12 col-sm-6"
-              v-show="form.type && form.type != 3"
+              :class="[1,2].includes(form.type) ? 'col-12 col-sm-4' : 'col-12 col-sm-8'"
               v-model="form.currency"
               label="Currency"
               :options="currency"
@@ -178,6 +177,7 @@ import { useQuasar } from "quasar";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { store } from "quasar/wrappers";
+import { map } from "lodash";
 
 export default defineComponent({
   components: {},
@@ -224,25 +224,50 @@ export default defineComponent({
     };
     const v$ = useVuelidate(rules, form);
 
+    const currency = computed(() => {
+      if (form.type === 3) {
+        return $store.getters["SETTING/GET_CURRENCY_LIST"];
+      }
+      if (form.merchantId) {
+        const mer = $store.getters["MERCHANT/GET_MERCHANTS"].find(x => x.Id === form.merchantId);
+        return map(mer.Currency, ele => ({ label: `${ele.Country} - ${ele.Currency}`, value: { Currency: ele.Currency, Country: ele.Country } }));
+      }
+      return [];
+    });
+
+    watch(
+      () => form.type,
+      async (v) => {
+        if (form.type === 3) form.merchantId = null;
+      }
+    );
+
     onMounted(async function () {
       $q.loading.show();
-      await $store.dispatch("MERCHANT/INDEX", { isExport: true });
-      await $store.dispatch("PRODUCT_CATEGORY/INDEX", { isExport: true });
+      await Promise.all([
+        $store.dispatch("MERCHANT/INDEX", { isExport: true }),
+        $store.dispatch("PRODUCT_CATEGORY/INDEX", { isExport: true }),
+        $store.dispatch("SETTING/CURRENCY_LIST")
+      ])
       $q.loading.hide();
     })
 
     return {
       form,
       v$,
+      currency,
       category: computed(() => $store.getters["PRODUCT_CATEGORY/GET_CATEGORY"]),
       discountType: computed(() => $store.getters["PRODUCT/GET_DISCOUNT_TYPE"]),
       productType: computed(() => $store.getters["PRODUCT/GET_PRODUCT_TYPE"]),
       expiryType: computed(() => $store.getters["PRODUCT/GET_PRODUCT_EXPIRY_TYPE"]),
-      currency: computed(() => $store.getters["MERCHANT/GET_MERCHANT_CURRENCY"]),
       merchants: computed(() => $store.getters["MERCHANT/GET_MERCHANTS"]),
+
       async onSubmit() {
         const valid = await v$.value.$validate();
         if (!valid) return;
+
+        form.country = form.currency.Country;
+        form.currency = form.currency.Currency;
         $q.loading.show();
         const response = await $store.dispatch(route.value.create.action, form);
         $q.loading.hide();

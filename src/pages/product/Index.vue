@@ -57,6 +57,30 @@
             />
           </div>
           <div class="col-3">
+            <q-select
+              v-model="searchFilter.currency"
+              square
+              outlined
+              :options="currency"
+              label="Currency"
+              emit-value
+              map-options
+              clearable
+            />
+          </div>
+          <div class="col-3">
+            <q-select
+              v-model="searchFilter.country"
+              square
+              outlined
+              :options="country"
+              label="Country"
+              emit-value
+              map-options
+              clearable
+            />
+          </div>
+          <div class="col-3">
             <search-filter
               v-model="searchFilter.name"
               label="Voucher Name"
@@ -268,6 +292,12 @@ export default defineComponent({
         align: "left"
       },
       {
+        name: "country",
+        label: "Country",
+        field: (row) => row.Country,
+        align: "left"
+      },
+      {
         name: "sku",
         label: "SKU",
         field: (row) => row.SKU,
@@ -320,6 +350,7 @@ export default defineComponent({
     onMounted(async function () {
       $q.loading.show();
       await $store.dispatch("MERCHANT/INDEX", { isExport: true });
+      await $store.dispatch("SETTING/CURRENCY_LIST");
       $q.loading.hide();
     })
 
@@ -403,6 +434,8 @@ export default defineComponent({
 
     return {
       merchant: computed(() => $store.getters["MERCHANT/GET_MERCHANTS"]),
+      currency: computed(() => $store.getters["SETTING/GET_CURRENCY_ONLY_LIST"]),
+      country: computed(() => $store.getters["SETTING/GET_COUNTRY_LIST"]),
       undo_upload_image,
       remove_image,
       product_images,

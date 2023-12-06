@@ -11,6 +11,7 @@
               :options="productType"
               emit-value
               map-options
+              readonly
               filled
               @blur="v$.type.$touch"
               :error="v$.type.$error"
@@ -26,6 +27,7 @@
               option-label="MerchantName"
               emit-value
               map-options
+              readonly
               filled
               clearable
               @blur="v$.merchantId.$touch"
@@ -38,6 +40,7 @@
               v-model="form.currency"
               label="Currency"
               :options="currency"
+              readonly
               emit-value
               map-options
               filled
@@ -60,6 +63,7 @@
               v-model="form.sku"
               label="Voucher SKU"
               filled
+              readonly
               @blur="v$.sku.$touch"
               :error="v$.sku.$error"
               :error-message="v$.sku.$errors[0]?.$message"

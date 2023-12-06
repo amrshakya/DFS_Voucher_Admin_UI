@@ -13,14 +13,6 @@ export async function LOGIN({ commit }, data) {
   }
   commit("SET_LOGGEDIN", true);
   commit("SET_ME", response.data.admin);
-  commit(
-    "SETTING/ADD_SETTING",
-    {
-      key: "currency",
-      data: response.data.currency,
-    },
-    { root: true }
-  );
   return response;
 }
 
@@ -42,14 +34,6 @@ export async function ME({ commit, state }) {
   const response = await api.post("/operator/authenticate/checkLogin");
   if (response.code == "common.success") {
     commit("SET_ME", response.data);
-    commit(
-      "SETTING/ADD_SETTING",
-      {
-        key: "currency",
-        data: response.data.currency,
-      },
-      { root: true }
-    );
     commit("SET_LOGGEDIN", true);
     return response;
   }

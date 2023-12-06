@@ -15,6 +15,19 @@
             lazy-rules
             :rules="[$rules.required('Value is required')]"
           />
+          <q-select
+            v-model="form.currency"
+            label="Currency"
+            :options="currencyList"
+            emit-value
+            map-options
+            multiple
+            use-chips
+            filled
+            :rules="[
+              $rules.required('Value is required')
+            ]"
+          />
           <q-input
             name="usernmae"
             v-model="form.username"
@@ -69,14 +82,22 @@ const $store = useStore();
 const $router = useRouter();
 
 const route = computed(() => $store.getters["MERCHANT/GET_ROUTE"]);
+const currencyList = computed(() => $store.getters["SETTING/GET_CURRENCY_LIST"]);
 
 const form = ref({
   merchantName: "",
+  currench: "",
   username: "",
   password: "",
   status: null,
 });
 const form$ = ref(null);
+
+onMounted(async function () {
+  $q.loading.show();
+  await $store.dispatch("SETTING/CURRENCY_LIST");
+  $q.loading.hide();
+});
 
 async function onSubmit() {
   const valid = await form$.value.validate();

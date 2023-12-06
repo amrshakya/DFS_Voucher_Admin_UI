@@ -110,6 +110,7 @@ import { useStore } from "vuex";
 import AppTableV2 from "components/AppTableV2.vue";
 import SearchFilter from "components/SearchFilter.vue";
 import { useRouter, useRoute } from "vue-router";
+
 export default defineComponent({
   components: {
     AppTableV2,
@@ -139,6 +140,12 @@ export default defineComponent({
         align: "left"
       },
       {
+        name: "currency",
+        label: "Currency",
+        field: (row) => get_currency_label(row),
+        align: "left"
+      },
+      {
         name: "status",
         label: "Status",
         field: (row) => row.Status,
@@ -157,6 +164,10 @@ export default defineComponent({
         align: "left"
       },
     ]);
+
+    function get_currency_label (row) {
+      return row.Currency ? row.Currency.map(r => `${r.Currency}-${r.Country}`).join(',') : '';
+    }
 
     async function revoke_keys (row) {
       $q.dialog({

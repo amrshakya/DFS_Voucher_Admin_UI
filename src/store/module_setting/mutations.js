@@ -1,7 +1,11 @@
-export function ADD_SETTING(state, data) {
-  state.settings[data.key] = data.data;
-}
+import { map, uniq } from "lodash";
 
-export function DELETE_SETTING(state, key) {
-  delete state.settings[key];
+export function ADD_CURRENCY_LIST(state, data) {
+  state.currencyList =  map(
+    data,
+    ele => ({ label: `${ele.Country} - ${ele.Currency}`, value: { Currency: ele.Currency, Country: ele.Country} })
+  );
+
+  state.currency = uniq(map(data, 'Currency'));
+  state.country = uniq(map(data, 'Country'));
 }

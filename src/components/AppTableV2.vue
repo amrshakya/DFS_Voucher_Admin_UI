@@ -52,7 +52,7 @@
             </div>
           </template>
 
-          <!-- <template v-slot:body-cell-currency="props">
+          <template v-slot:body-cell-currency="props">
             <td :props="props" class="actions q-gutter-x-sm">
               <q-chip
                 :clickable="false"
@@ -61,11 +61,13 @@
                 size="md"
                 square
                 color="teal"
+                v-for="val in props.value.split(',')"
+                :key="val"
               >
-                {{ props.value }}
+                {{ val }}
               </q-chip>
             </td>
-          </template> -->
+          </template>
 
           <template v-slot:body-cell-status="props">
             <td :props="props" class="actions q-gutter-x-sm">
