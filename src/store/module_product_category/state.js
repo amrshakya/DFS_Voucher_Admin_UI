@@ -1,6 +1,8 @@
 export default function () {
   return {
     categorys: [],
+    products: [],
+    assigned_products: [],
     pagination: {
       page: 1,
       rowsPerPage: 50,
@@ -25,6 +27,10 @@ export default function () {
         path: "/product/category/assign/:id",
         permission: "admin.product.category.assign.edit",
       },
+      get_product: {
+        action: "PRODUCT_CATEGORY/GET_CATEGORY_PRODUCT",
+        path: "/product/category/product"
+      }
     },
   };
 }

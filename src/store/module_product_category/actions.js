@@ -26,3 +26,19 @@ export async function EDIT({ commit, state }, data) {
   }
   return response;
 }
+
+export async function ASSIGN({ commit, state}, data) {
+  const response = await api.put(
+    state.route.assign.path.replace(":id", data.id),
+    data.form
+  );
+  return response;
+}
+
+export async function GET_CATEGORY_PRODUCT({ commit, state }, data) {
+  const response = await api.get(state.route.get_product.path, { params: data});
+  if (response.code === "common.success") {
+    commit('SET_CATEGORY_PRODUCT', response);
+  }
+  return response;
+}

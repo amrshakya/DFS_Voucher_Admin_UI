@@ -19,3 +19,8 @@ export function EDIT_CATEGORY(state, data) {
     state.categorys[index] = data;
   }
 }
+
+export function SET_CATEGORY_PRODUCT(state, response) {
+  state.products = response.data.excluded;
+  state.assigned_products = response.data.assigned;
+}
