@@ -181,6 +181,24 @@
                 <template v-else-if="col.name == 'expiry'">
                   {{ displayExpiryRange(props.row.Expiry) }}
                 </template>
+                <template v-else-if="col.name == 'isSales'">
+                  <q-chip
+                    :clickable="false"
+                    dense
+                    class="text-weight-medium text-body2 text-white"
+                    size="md"
+                    square
+                    :color="[
+                      'negative',
+                      'positive',
+                    ][col.value]
+                      "
+                  >
+                    {{
+                      isSales.find((v) => v.value == col.value)?.label || "--"
+                    }}
+                  </q-chip>
+                </template>
                 <template v-else-if="col.name == 'status'">
                   <q-chip
                     :clickable="false"
@@ -256,6 +274,8 @@ export default defineComponent({
     const route = computed(() => $store.getters["PRODUCT/GET_ROUTE"]);
     const $route = useRoute();
     const searchFilter = ref({ ...$route.query });
+    const isSales = computed(() => $store.getters["PRODUCT/GET_IS_SALES"]);
+    console.log(isSales);
     const status = computed(() => $store.getters["PRODUCT/GET_STATUS"]);
     const discountType = computed(() => $store.getters["PRODUCT/GET_DISCOUNT_TYPE"]);
 
@@ -325,6 +345,12 @@ export default defineComponent({
         name: "expiry",
         label: "Expiry Range",
         field: (row) => row.Expiry,
+        align: "left"
+      },
+      {
+        name: "isSales",
+        label: "Is Sales?",
+        field: (row) => row.IsSales,
         align: "left"
       },
       {
@@ -443,6 +469,7 @@ export default defineComponent({
       submit_upload_image,
       show_product_image,
       status,
+      isSales,
       table,
       hasDiscount,
       discountType,

@@ -6,6 +6,10 @@ export function GET_PRODUCT_PAGINATION(state) {
   return state.pagination;
 }
 
+export function GET_IS_SALES(state) {
+  return state.isSales;
+}
+
 export function GET_STATUS(state) {
   return state.status;
 }

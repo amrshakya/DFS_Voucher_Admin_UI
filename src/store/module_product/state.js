@@ -5,6 +5,10 @@ export default function () {
       page: 1,
       rowsPerPage: 50,
     },
+    isSales: [
+      { label: 'NO', value: 0 },
+      { label: 'YES', value: 1 }
+    ],
     status: [
       { label: 'Inactive', value: 0 },
       { label: 'Active', value: 1 }

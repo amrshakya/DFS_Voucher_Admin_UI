@@ -158,8 +158,9 @@
               :error="v$.expiry.value.$error"
               :error-message="v$.expiry.value.$errors[0]?.$message"
             />
+            <q-toggle v-model="form.isSales" label="Is Sales?" class="col-12 col-sm-6" />
+            <q-toggle v-model="form.status" label="Status" class="col-12 col-sm-6" />
           </div>
-          <q-toggle v-model="form.status" label="Status" left-label />
           <div>
             <q-btn label="Submit" type="submit" color="primary" />
           </div>
@@ -202,6 +203,7 @@ export default defineComponent({
         type: null,
         value: 0
       },
+      isSales: false,
       status: true
     });
     const rules = {
@@ -220,6 +222,7 @@ export default defineComponent({
         type: {},
         value: {}
       },
+      isSales: { required },
       status: { required }
     };
     const v$ = useVuelidate(rules, form);
