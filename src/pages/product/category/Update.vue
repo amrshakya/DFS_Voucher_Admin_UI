@@ -12,6 +12,14 @@
             :error-message="v$.name.$errors[0]?.$message"
           />
           <q-input
+            v-model="form.altName"
+            label="Alternate Category Name"
+            filled
+            @blur="v$.altName.$touch"
+            :error="v$.altName.$error"
+            :error-message="v$.altName.$errors[0]?.$message"
+          />
+          <q-input
             v-model="form.description"
             type="textarea"
             label="Description"
@@ -102,6 +110,7 @@ export default defineComponent({
     const route = computed(() => $store.getters["PRODUCT_CATEGORY/GET_ROUTE"]);
     let form = ref({
       name: "",
+      altName: "",
       description: "",
       order: 1,
       status: null,
@@ -110,6 +119,7 @@ export default defineComponent({
     });
     const rules = {
       name: { required },
+      altName: { required },
       description: {},
       order: { required },
       isFlash: {},

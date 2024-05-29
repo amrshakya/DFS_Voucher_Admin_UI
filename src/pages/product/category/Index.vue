@@ -196,6 +196,12 @@ export default defineComponent({
         align: "left"
       },
       {
+        name: "altName",
+        label: "Alternate Name",
+        field: (row) => row.AltName,
+        align: "left"
+      },
+      {
         name: "duration",
         label: "Flash Duration",
         field: (row) => row.StartTime,
