@@ -132,8 +132,8 @@ export default defineComponent({
         $q.loading.show();
 
         const formField = { ...form };
-        formField.startTime = formField.isFlash ? formField.dateRange.from : '';
-        formField.endTime = formField.isFlash ? formField.dateRange.to : '';
+        formField.startTime = formField.isFlash ? moment(formField.dateRange.from).format("YYYY-MM-DD 00:00:00") : '';
+        formField.endTime = formField.isFlash ? moment(formField.dateRange.to).format('YYYY-MM-DD 23:59:59') : '';
         delete formField.dateRange;
 
         const response = await $store.dispatch(route.value.create.action, formField);
