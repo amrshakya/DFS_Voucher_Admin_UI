@@ -1,4 +1,4 @@
 module.exports = {
-  "API": "https://api.lfcoinbdt.com/admin",
+  "API": "https://admin.jdbfreegame.com/admin",
   "APP_NAME": "DFSVoucher"
 }
