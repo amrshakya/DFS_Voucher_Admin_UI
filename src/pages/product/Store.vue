@@ -103,7 +103,7 @@
             <q-input
               class="col-12 col-sm-6"
               v-model="form.quantity"
-              label="Quantity"
+              label="Redeem Quantity"
               type="number"
               filled
               @blur="v$.quantity.$touch"
