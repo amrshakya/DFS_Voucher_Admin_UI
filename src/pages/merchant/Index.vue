@@ -73,6 +73,17 @@
           :storeListGettersPath="storeListGettersPath"
           :searchFilter="searchFilter"
         >
+        <template v-slot:body-cell-merchantRedeemUrl="props">
+          <q-chip
+            dense
+            class="text-weight-medium text-body2 text-white"
+            size="md"
+            square
+            :color="props.value ? 'positive' : 'red'"
+          >
+            {{ props.value ? props.value : "N/A" }}
+          </q-chip>
+        </template>
         <template v-slot:body-cell-actions-prepend="props">
           <q-btn
             v-show="$can('read', route.update_status.permission)"
@@ -143,6 +154,12 @@ export default defineComponent({
         name: "currency",
         label: "Currency",
         field: (row) => get_currency_label(row),
+        align: "left"
+      },
+      {
+        name: "merchantRedeemUrl",
+        label: "Merchant Redeem Url",
+        field: (row) => row.MerchantRedeemUrl,
         align: "left"
       },
       {

@@ -15,6 +15,13 @@
             lazy-rules
             :rules="[$rules.required('Value is required')]"
           />
+          <q-input
+            name="merchantRedeemUrl"
+            v-model="form.merchantRedeemUrl"
+            label="Merchant Redeem Url"
+            filled
+            lazy-rules
+          />
           <q-select
             v-model="form.currency"
             label="Currency"
@@ -86,6 +93,7 @@ const currencyList = computed(() => $store.getters["SETTING/GET_CURRENCY_LIST"])
 
 const form = ref({
   merchantName: "",
+  merchantRedeemUrl: "",
   currench: "",
   username: "",
   password: "",
