@@ -184,6 +184,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { formatHandler } from "src/utils";
 import { store } from "quasar/wrappers";
+import cloneDeep from 'lodash/cloneDeep';
 
 export default defineComponent({
   components: {},
@@ -244,7 +245,7 @@ export default defineComponent({
       });
       const res = response.data.records[0];
       delete res.Image;
-      form.value = formatHandler.convertKeysToLowerCase({ ...res, Status: !!res.Status, IsSales: !!res.IsSales });
+      form.value = cloneDeep(formatHandler.convertKeysToLowerCase({ ...res, Status: !!res.Status, IsSales: !!res.IsSales }));
       $q.loading.hide();
     })
 
